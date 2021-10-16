@@ -1,0 +1,8 @@
+{
+    "name": "socket-room-system",
+    "version": "1.0.2",
+    "type": "module",
+    "dependencies": {
+        "uuid": "^8.3.2"
+    }
+}
