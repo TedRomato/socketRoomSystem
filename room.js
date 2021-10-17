@@ -46,7 +46,6 @@ export default (socket, app, roomIsEmpty, roomSize = 2) => {
             socket.emit(emit, data)
         },
         recieveData: function(socket, data){
-            console.log(socket)
             this.app.recieveData(socket.id, data)
         },
         getRoomOptions: function(){

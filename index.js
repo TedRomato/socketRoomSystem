@@ -12,14 +12,11 @@ export default (appConstructor, io, app) => {
     io.on("connection", (socket) => {
         //connection stage
         socket.on(emits.clientToServer.createRoom, (roomSize = 2) => {
-            console.log("Creating room ...");
             const status = roomSystem.createRoom(socket, roomSize)
             socket.emit(status.message, status?.data)
-            console.log(roomSystem);
         })
 
         socket.on(emits.clientToServer.joinRoom, (roomId) => {
-            console.log("Joining room ...");
             const room = roomSystem.getRoom(roomId)
             if(!room) return socket.emit(emits.serverToClient.roomDoesntExist, roomId)
             const status = room.connect(socket)
@@ -30,7 +27,6 @@ export default (appConstructor, io, app) => {
                     {option: "members", newVal: room.members.map(socket => socket.id)}
                 )
             }
-            console.log(room.members.map(socket => socket.id));
         })
 
 
