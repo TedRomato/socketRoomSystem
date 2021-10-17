@@ -13,7 +13,7 @@ const emits = {
         roomLeft: "room_left_succesfully",
         kicked: "kicked",
         //run stage
-        appStateChange: "app_state_change" //data: prop, newVal
+        appData: "app_data" //data: prop, newVal
     },
 
     clientToServer: {

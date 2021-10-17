@@ -62,8 +62,8 @@ export default (socket, app, roomIsEmpty, roomSize = 2) => {
         }
     }
 
-    room.app.broadcast = (emit, data) => {
-        room.broadcast(emit, data)
+    room.app.broadcast = (data) => {
+        room.broadcast(emits.serverToClient.appData, data)
     }
 
     room.app.onConnect(room.roomLeader.id)
