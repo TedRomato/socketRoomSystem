@@ -67,9 +67,9 @@ export default (appConstructor, io, app) => {
 
         //run stage
         socket.on(emits.clientToServer.appData, (data) => {
-            const room = roomSystem.getRoom(socket.roomId)
+            const room = roomSystem.getRoom(socket.data.roomId)
             if(!room) return socket.emit(emits.serverToClient.roomDoesntExist)
-            room.recieveData(socket.id, data)
+            room.recieveData(socket, data)
         })
-    });
+    })
 }
