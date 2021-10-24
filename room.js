@@ -1,6 +1,6 @@
-const uuidv4 = require('uuid').v4
+const { v4: uuidv4 } = require('uuid');
 
-export default (socket, app, roomIsEmpty, roomSize = 2) => {
+module.exports = (socket, app, roomIsEmpty, roomSize = 2) => {
     const room = {
         id: uuidv4(),
         roomLeader: socket,

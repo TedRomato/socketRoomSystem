@@ -1,6 +1,6 @@
 const createRoom  = require('./room.js')
 
-export default (appConstructor) => {
+module.exports = (appConstructor) => {
     return {
         rooms:[],
         appConstructor: appConstructor,

@@ -1,8 +1,8 @@
 const express =  require("express")
 const createRoomSystem = require('./roomSystem.js')
 
-export default (appConstructor, io, app) => {
-    const path = import.meta.url.replace("index.js", "").replace("file:///", "") + "socketRoomSystem-Client"
+module.exports = (appConstructor, io, app) => {
+    const path = __dirname + "/socketRoomSystem-Client"
     app.use(express.static(path))
     const roomSystem = createRoomSystem(appConstructor)
     
