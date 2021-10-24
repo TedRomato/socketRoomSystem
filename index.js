@@ -18,7 +18,7 @@ module.exports = (appConstructor, io, app) => {
             if(!room) return socket.emit("room_doesnt_exist", roomId)
             const status = room.connect(socket)
             socket.emit(status.message, status?.data)
-            if(status.message === "room_joined_succesfully"){
+            if(status.message === "room_joined"){
                 room.broadcast(
                     "room_state_changed", 
                     {option: "members", newVal: room.members.map(socket => socket.id)}
@@ -45,7 +45,7 @@ module.exports = (appConstructor, io, app) => {
                 )
             })
             socket.emit(status.message, status?.data)
-            room.broadcast("room_state_change", {option: members, newVal: room.members.map(socket => socket.id)})
+            room.broadcast("room_state_change", {option: "members", newVal: room.members.map(socket => socket.id)})
         })
 
         socket.on("change_room_option", (proprety, value) => {
