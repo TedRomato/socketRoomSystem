@@ -1,17 +1,16 @@
-import emits from "./emits.js"
 const socket = io()
 
 
 
 export const client = {
     createRoom: function() {
-        socket.emit(emits.clientToServer.createRoom)
+        socket.emit("create_room")
     },
     joinRoom: function(roomId) {
-        socket.emit(emits.clientToServer.joinRoom, roomId)
+        socket.emit("join_room", roomId)
     },
     getRoomOptions: function(){
-        socket.emit(emits.clientToServer.getRoomOptions)
+        socket.emit("get_room_options")
     },/*
     changeRoomOption: function(proprety, value){
         socket.emit(emits.clientToServer.changeRoomOption, proprety, value)
@@ -20,7 +19,7 @@ export const client = {
         socket.emit(emits.clientToServer.kick, id)
     },*/
     sendAppData: function(data) {
-        socket.emit(emits.clientToServer.appData, data)
+        socket.emit("app_data", data)
     },
     on: function(event, callback) {
         socket.off(event)

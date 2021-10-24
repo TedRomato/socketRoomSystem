@@ -1,5 +1,4 @@
-import emits from './socketRoomSystem-Client/socketRoomSystem-Client/emits.js'
-import { v4 as uuidv4 } from 'uuid'
+const uuidv4 = require('uuid').v4
 
 export default (socket, app, roomIsEmpty, roomSize = 2) => {
     const room = {
@@ -15,15 +14,15 @@ export default (socket, app, roomIsEmpty, roomSize = 2) => {
         connect: function(socket) {
             for(const memberSocket of this.members) {
                 if(memberSocket === socket){
-                    return {message: emits.serverToClient.alreadyMember, data:this.id}
+                    return {message: "already_member", data:this.id}
                 }
             }
             if(this.members.length >= this.maxMembers) {
-                return {message: emits.serverToClient.roomFull, data:this.id}
+                return {message: "room_is_full", data:this.id}
             }
             this.members.push(socket)
             this.onConnect(socket)
-            return {message:emits.serverToClient.roomJoined, data:this.id}
+            return {message: "room_joined", data:this.id}
         },
         onLeave: function(socket){
             this.app.onLeave(socket.id)
@@ -36,7 +35,7 @@ export default (socket, app, roomIsEmpty, roomSize = 2) => {
                 onLeaderLeave()
             }
             this.onLeave(socket)
-            return {message: emits.serverToClient.roomLeft}
+            return {message: "room_left"}
 
         },
         broadcast: function(emit,data){
@@ -63,7 +62,7 @@ export default (socket, app, roomIsEmpty, roomSize = 2) => {
     }
 
     room.app.broadcast = (data) => {
-        room.broadcast(emits.serverToClient.appData, data)
+        room.broadcast("app_data", data)
     }
 
     room.app.onConnect(room.roomLeader.id)

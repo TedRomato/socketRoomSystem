@@ -1,7 +1,6 @@
 {
     "name": "socket-room-system",
-    "version": "1.0.8",
-    "type": "module",
+    "version": "1.0.9",
     "dependencies": {
         "uuid": "^8.3.2"
     }

@@ -1,5 +1,4 @@
-import createRoom from'./room.js'
-import emits from './socketRoomSystem-Client/socketRoomSystem-Client/emits.js'
+const createRoom  = require('./room.js')
 
 export default (appConstructor) => {
     return {
@@ -8,7 +7,7 @@ export default (appConstructor) => {
         createRoom: function(socket, roomSize = 2) {
             const room = createRoom(socket, this.appConstructor(), () => {"room is empty"}, roomSize)
             this.rooms.push(room)
-            return {message:emits.serverToClient.roomCreated, data: room.id}
+            return {message: "room_created", data: room.id}
         },
         getRoom: function(roomId) {
             for(const room of this.rooms) {
