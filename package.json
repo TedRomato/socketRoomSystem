@@ -1,9 +1,10 @@
 {
     "name": "socket-room-system",
-    "version": "1.1.5",
+    "version": "1.1.6",
     "dependencies": {
         "uuid": "^8.3.2"
     },
+    "main": "src/socketRoomSystem.js",
     "scripts":{
         "jsdoc":"jsdoc -c jsdoc_config.json"
     },
