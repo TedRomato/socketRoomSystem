@@ -1,6 +1,6 @@
 node_modules/
-package-lock.json
-demoProject/
 out/
+demoProject/
+package-lock.json
 jsdoc_config.json
 package-lock.json
