@@ -61,7 +61,7 @@ class SocketRoomSystem {
 
 
             socket.on(this.eventNames.joinRoom, (roomId) => {
-                const room = this..getRoom(roomId)
+                const room = this.roomSystem.getRoom(roomId)
                 // emit "room_not_found" when no room is found
                 if(!room) return socket.emit("room_not_found", roomId)
                 //connect new socket to room
