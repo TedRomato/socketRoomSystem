@@ -28,7 +28,7 @@ class RoomSystem{
      * @returns {Status} Status message, with {string} created room id as a data.
      */
     createRoom(socket, maxMembers = 2) {
-        const room = new Room(socket, this.appConstructor(), () => {"room is empty"}, maxMembers)
+        const room = new Room(socket, this.appConstructor(), maxMembers,() => {console.log("Room is empty")}, ()=> {console.log("Leader left")})
         this.rooms.push(room)
         return new Status("room_created", room.id)
     }

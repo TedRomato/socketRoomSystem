@@ -15,7 +15,7 @@ class Room{
      * @param {Function} onRoomIsEmpty - Callback function called, when a room gets empty. 
      * @param {Function} onLeaderLeave - Callback function called, when leader leaves a room.
      */
-    constructor(socket, maxMembers, app, onRoomIsEmpty, onLeaderLeave){
+    constructor(socket, app, maxMembers, onRoomIsEmpty, onLeaderLeave){
         /**
          * @property {string} id - Unique identifier of room.
          */
@@ -136,9 +136,9 @@ class Room{
      */
     broadcast(emit, data) {
         for (const memberSocket of this.members) {
-            socket.to(memberSocket.id).emit(emit, data);
+            this.roomLeader.to(memberSocket.id).emit(emit, data);
         }
-        socket.emit(emit, data);
+        this.roomLeader.emit(emit, data);
     }
     
     /**
