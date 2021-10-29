@@ -4,5 +4,8 @@
     "dependencies": {
         "uuid": "^8.3.2"
     },
+    "scripts":{
+        "jsdoc":"jsdoc -c jsdoc_config.json"
+    },
     "devDependencies": {}
 }

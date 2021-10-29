@@ -42,6 +42,201 @@
 
 
 
+    <section>
+        <article><h1>socketRoomSystem</h1>
+<h1>example:</h1>
+<h2>main.js:</h2>
+<pre class="prettyprint source lang-js"><code>// initialize express and socket.io servers
+const express = require('express')
+const {Server} = require('socket.io')
+const { createServer } = require('http')
+const app = express()
+const httpServer = createServer(app)
+const io = new Server(httpServer)
+
+// import socket-room-system module
+const startRoomSystem = require('socket-room-system')
+// import custom app constructor from game.js file (sample below)
+const gameConstructor = require('./game.js')
+// begin room system with arguments: custom app-contructor, io-server, express-app
+startRoomSystem(gameConstructor, io, app)
+
+//more express set-up
+app.set('view engine', 'ejs')
+app.use(express.static('public'))
+
+app.get('/', (req, res) => {
+    res.render('index.ejs')
+})
+
+
+httpServer.listen(5000 || process.env.PORT, () => {
+    console.log('Server has started.')
+})
+
+</code></pre>
+<h2>game.js:</h2>
+<pre class="prettyprint source lang-js"><code>// app has to implement recieveData and onConnect function
+// app has a function broadcast, which is added in room system layer
+// be sure not to overrride it
+module.exports = () => {
+    return {
+        leader: undefined,
+        running: false,
+        counter:0,
+        interval:undefined,
+
+        // gets called when new client joins room
+        // client id is a uuid4 string
+        onConnect: function(clientId){
+            // if noone is connected make new client a leader
+            if(this.leader) return
+            this.leader = clientId
+        },
+        
+        // gets called when room recieves data
+        // clientId is sender uuid
+        // in this example I differentiate between requests using data.type, but you can use any keyword (emit, message, command)
+        recieveData: function(clientId, data){
+            // on data.type 'startAutoAdd', if client issuing this command is a leader, and interval is not yet running
+            // start interval, that adds one to counter and broadcasts new value
+            if(data.type === 'startAutoAdd' && clientId === this.leader && !this.running){
+                this.running = true
+                this.interval = setInterval(() => {
+                    this.counter += 1
+                    // broadcasting message to everyone in room
+                    this.broadcast({type: &quot;counterChange&quot;, counter: this.counter})
+                }, 1000)
+            }
+            // leader can stop interval
+            if(data.type === 'stopAutoAdd' && clientId === this.leader && this.running){
+                this.running = false
+                clearInterval(this.interval)
+            }
+            // add one to counter and broadcast
+            if(data.type === &quot;add&quot;){
+                this.counter += 1
+                this.broadcast({type: &quot;counterChange&quot;, counter: this.counter})
+            }
+        }
+    }
+}
+</code></pre>
+<h2>index.js:</h2>
+<pre class="prettyprint source lang-js"><code>import { client } from &quot;/socketRoomSystem-Client/client.js&quot;
+
+
+$(&quot;#CreateRoom&quot;).on('click', () => {
+    // client creates room, and joins it automatically
+    client.createRoom()
+})
+
+client.on(&quot;room_created&quot;,(roomId) => {
+    // createRoom callback -> roomId is uuid string of a new room 
+    console.log(&quot;Created room with id: &quot; + roomId)
+})
+
+$(&quot;#JoinRoom&quot;).on('click', () => {
+    // client joins a room -> argument is a uuid of existing room
+    client.joinRoom($(&quot;#JoinRoomId&quot;).val())
+})
+
+client.on(&quot;room_joined&quot;, (roomId) => {
+    // joinRoom callback
+    console.log(&quot;Joined room with id: &quot; + roomId)
+})
+
+$(&quot;#GetRoomOptions&quot;).on('click', () => {
+    console.log(&quot;room opt&quot;)
+    // request room options
+    client.getRoomOptions()
+})
+
+client.on(&quot;room_options&quot;, (data)=>{
+    // getRoomOptions callback
+    // data -> roomObject
+    console.log(data)
+})
+
+client.on(&quot;room_state_changed&quot;, (data) => {
+    // is triggered when room changes it's configuration 
+    // data contain option, that was changed and new val ->  {option: &quot;members&quot;, newVal: [&quot;socketA&quot;,&quot;socketB&quot;,&quot;socketC&quot;]}
+    // triggered for example when someone joins a room
+    console.log(data)
+})
+
+client.on('room_doesnt_exist', (room) => {
+    console.log(`room with id ${room} doesn't exist`)
+})
+
+
+
+
+
+$(&quot;#AutoAdd&quot;).on('click', () => {
+    // sendAppData passes data to your app on a server
+    client.sendAppData({type: 'startAutoAdd'})
+})
+
+$(&quot;#StopAutoAdd&quot;).on('click', () => {
+    client.sendAppData({type: 'stopAutoAdd'})
+})
+
+$(&quot;#Add&quot;).on('click', () => {
+    client.sendAppData({type: 'add'})
+})
+
+// gets called on a broadcast from your app
+client.on(&quot;app_data&quot;, (data) => {
+    if(data.type === 'counterChange'){
+        $(&quot;#Counter&quot;).text(JSON.stringify(data.counter))
+    }
+})
+
+
+</code></pre>
+<p>index.ejs:</p>
+<pre class="prettyprint source lang-html"><code>&lt;!DOCTYPE html>
+&lt;html lang=&quot;en&quot;>
+&lt;head>
+    &lt;meta charset=&quot;UTF-8&quot;>
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;>
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+    &lt;script src=&quot;https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js&quot; defer>&lt;/script>
+    &lt;!-- 
+      Be sure to import &quot;/socket.io/socket.io.js&quot; and &quot;/socketRoomSystem-Client/client.js&quot;,
+      otherwise import {client} won't work. Also don't forget to change type to type=&quot;module&quot;.
+     -->
+    &lt;script type=&quot;module&quot; src=&quot;/socket.io/socket.io.js&quot; defer>&lt;/script>
+    &lt;script type=&quot;module&quot; src=&quot;/socketRoomSystem-Client/client.js&quot; defer>&lt;/script>
+    &lt;script type=&quot;module&quot; src=&quot;/index.js&quot; defer>&lt;/script> 
+    &lt;title>Document&lt;/title>
+    
+&lt;/head>
+&lt;body>
+    &lt;h1>Index&lt;/h1>
+    &lt;button id=&quot;CreateRoom&quot;>Create room&lt;/button>
+    &lt;br>
+    &lt;button id=&quot;JoinRoom&quot;>Join room&lt;/button>
+    &lt;input id=&quot;JoinRoomId&quot;type=&quot;text&quot;>
+    &lt;br>
+    &lt;button id=&quot;GetRoomOptions&quot;>get room options&lt;/button>
+
+    &lt;br>
+    &lt;br>
+    &lt;br>
+    &lt;br>
+
+    &lt;button id=&quot;AutoAdd&quot;>auto add&lt;/button>
+    &lt;button id=&quot;StopAutoAdd&quot;>auto add&lt;/button>
+    &lt;button id=&quot;Add&quot;>add&lt;/button>
+    &lt;h1 id=&quot;Counter&quot;>0&lt;/h1>
+&lt;/body>
+&lt;/html>
+
+</code></pre></article>
+    </section>
+
 
 
 
@@ -50,13 +245,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#createRoom">createRoom</a></li><li><a href="global.html#getRoom">getRoom</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Room.html">Room</a></li><li><a href="RoomSystem.html">RoomSystem</a></li><li><a href="SocketRoomSystem.html">SocketRoomSystem</a></li><li><a href="Status.html">Status</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Oct 26 2021 13:27:51 GMT+0200 (Středoevropský letní čas)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Oct 29 2021 18:58:00 GMT+0200 (Středoevropský letní čas)
 </footer>
 
 <script> prettyPrint(); </script>
