@@ -45,7 +45,7 @@ class SocketRoomSystem {
      */
     start(){
         // path to room system client code 
-        let clientPath = __dirname + "/socketRoomSystem-Client"
+        let clientPath = __dirname + "\\socketRoomSystem-Client"
         // expose client code under /socketRoomSystem-Client folder on client 
         this.app.use(express.static(clientPath))
         
