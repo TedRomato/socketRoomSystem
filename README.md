@@ -1,9 +1,13 @@
-# Socket room system, serves as a middleware, for easy room(lobby) managment of socket(socket.io) connections. Uses Express and socket.io.
+# Socket room system,
+### serves as a middleware, for easy room(lobby) managment of socket(socket.io) connections. Uses [express](http://expressjs.com/) and [socket.io]{https://socket.io/}.
+
+# [full docs]{https://tedromato.github.io/} 
 
 # Walkthrough
 # Server side
 ## Server file set up. 
-Here we set up our server (express and socket.io): \n(Right now you have to use express, but I'm planning on implementing other options)
+Here we set up our server ([express](http://expressjs.com/) and [socket.io]{https://socket.io/}):
+(Right now you have to use ([express](http://expressjs.com/), but I'm planning on implementing other options)
 ``` js
 // initialize express and socket.io servers
 const express = require('express')
