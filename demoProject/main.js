@@ -12,10 +12,10 @@ const {SocketRoomSystem} = require('socket-room-system')
 const gameConstructor = require('./game.js')
 // begin room system with arguments: RoomOptions: {}, io-server, express-app
 const socketRoomSystem = new SocketRoomSystem(gameConstructor, io, app)
+socketRoomSystem.start();
 
 //more express set-up
 app.use(express.static('public'))
-socketRoomSystem.start();
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html')
