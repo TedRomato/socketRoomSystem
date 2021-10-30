@@ -1,12 +1,12 @@
 # Socket room system,
-### serves as a middleware, for easy room(lobby) managment of socket(socket.io) connections. Uses [express](http://expressjs.com/) and [socket.io]{https://socket.io/}.
+### serves as a middleware, for easy room(lobby) managment of socket(socket.io) connections. Uses [express](http://expressjs.com/) and [socket.io](https://socket.io/).
 
-# [full docs]{https://tedromato.github.io/} 
-
+ Full documentation: [docs](https://tedromato.github.io/)
 # Walkthrough
 # Server side
 ## Server file set up. 
-Here we set up our server ([express](http://expressjs.com/) and [socket.io]{https://socket.io/}):
+Here we set up our server ([express](http://expressjs.com/) and [socket.io](https://socket.io/)):
+<br>
 (Right now you have to use ([express](http://expressjs.com/), but I'm planning on implementing other options)
 ``` js
 // initialize express and socket.io servers
@@ -212,5 +212,5 @@ client.on("app_data", ({client, message}) => console.log(`User &{client} sent ${
 ```
 
 
-You can check out demo project, if you want to see other socket room system in action.
+You can check out [demo project](https://github.com/TedRomato/socketRoomSystem/tree/main/demoProject), if you want to see other socket room system in action.
 
