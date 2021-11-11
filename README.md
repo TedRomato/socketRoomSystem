@@ -215,21 +215,23 @@ client.on("app_data", ({client, message}) => console.log(`User &{client} sent ${
 You can check out [demo project](https://github.com/TedRomato/socketRoomSystem/tree/main/demoProject), if you want to see other socket room system in action.
 
 
-What is missing: 
+# What is missing: 
 ---------------------------------
-Problem 1 description:
+### Problem 1 description: <br>
 As it is now, every new tab opens a new socket, therefore creates a new connection. So technically, this allows to have multiple socketRoomSystem clients connected from same computer, and also doing it this way doesn't allow to connect as the same client from a different tab or reconnect.
 
-Problem 1 Fix: 
+### Problem 1 Fix: <br>
 I would like to implement persistent connections to socket room system. Propably save a cookie with id in client browser, to map all socket connections from the same browser to one socketRoomSystem client. (repo that already does something like that: [io-session-handler](https://www.npmjs.com/package/io-session-handler))  
 
-----------------------------------
-Problem 2 description:
+---------------------------------
+
+### Problem 2 description: <br>
 SocketRoomSystem is still missing some key functionality: 
 a) handling when a person leaves
 b) enabling room leader to modify room options 
 c) enabling leader to kick 
 
-Problem 2 Fix: I will implement these features, after problem 1 is solved.
-----------------------------------
+### Problem 2 Fix: <br>
+I will implement these features, after problem 1 is solved.
 
+---------------------------------
